@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VAULT — Products</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@300;400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0c0b0a;
+    --bg2: #111009;
+    --surface: #161410;
+    --surface2: #1c1a15;
+    --border: rgba(255,255,255,0.07);
+    --border-bright: rgba(255,255,255,0.15);
+    --gold: #c9a96e;
+    --gold-dim: #9a7c4f;
+    --cream: #f0ead8;
+    --text: #e8e0cc;
+    --text-dim: #8a8070;
+    --text-muted: #4a4438;
+    --accent: #d4a853;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.4rem 3rem;
+    border-bottom: 1px solid var(--border);
+    background: rgba(12,11,10,0.85);
+    backdrop-filter: blur(20px);
+  }
+
+  .nav-logo {
+    font-family: 'DM Mono', monospace;
+    font-weight: 300;
+    font-size: 0.75rem;
+    letter-spacing: 0.35em;
+    color: var(--gold);
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    text-decoration: none;
+    transition: color 0.3s;
+    font-family: 'DM Mono', monospace;
+    font-weight: 300;
+  }
+
+  .nav-links a:hover { color: var(--cream); }
+  .nav-links a.active { color: var(--gold); }
+
+  .nav-cart {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: color 0.3s;
+    background: none;
+    border: none;
+  }
+
+  .nav-cart:hover { color: var(--cream); }
+
+  /* HERO */
+  .hero {
+    padding: 10rem 3rem 5rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.4em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: var(--gold-dim);
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 6vw, 5.5rem);
+    font-weight: 400;
+    line-height: 1.1;
+    color: var(--cream);
+    max-width: 700px;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .hero-sub {
+    margin-top: 2rem;
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    max-width: 480px;
+    line-height: 1.8;
+    font-weight: 300;
+  }
+
+  /* FILTERS */
+  .filters {
+    padding: 0 3rem 3rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 2rem;
+  }
+
+  .filter-tabs {
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .filter-tab {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 0.5rem 1.2rem;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    border-right: 1px solid var(--border);
+  }
+
+  .filter-tab:last-child { border-right: none; }
+  .filter-tab:hover { color: var(--text); background: var(--surface); }
+  .filter-tab.active { background: var(--surface2); color: var(--gold); }
+
+  .filter-sort {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .filter-sort span {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  .filter-sort select {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    padding: 0.4rem 1rem 0.4rem 0.6rem;
+    cursor: pointer;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    border-radius: 2px;
+  }
+
+  /* GRID */
+  .products-section {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 3rem 3rem 6rem;
+  }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5px;
+    background: var(--border);
+  }
+
+  /* PRODUCT CARD */
+  .product-card {
+    background: var(--bg);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  .product-card:hover { background: var(--surface); }
+
+  .product-card.featured {
+    grid-column: span 2;
+  }
+
+  .product-image {
+    width: 100%;
+    aspect-ratio: 1;
+    background: var(--surface);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .product-card.featured .product-image {
+    aspect-ratio: 2/1;
+  }
+
+  .product-image-inner {
+    width: 55%;
+    height: 55%;
+    position: relative;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .product-card:hover .product-image-inner {
+    transform: scale(1.06) translateY(-4px);
+  }
+
+  /* SVG product illustrations */
+  .img-vessel { }
+  .img-serum { }
+  .img-oil { }
+  .img-elixir { }
+  .img-ritual { }
+
+  .product-badge {
+    position: absolute;
+    top: 1.2rem;
+    left: 1.2rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.7rem;
+    border: 1px solid var(--gold-dim);
+    color: var(--gold);
+    background: rgba(12,11,10,0.6);
+  }
+
+  .product-quick-add {
+    position: absolute;
+    bottom: 1.2rem;
+    right: 1.2rem;
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--border-bright);
+    background: rgba(12,11,10,0.7);
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 18px;
+    line-height: 1;
+    backdrop-filter: blur(8px);
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  .product-card:hover .product-quick-add {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .product-quick-add:hover {
+    background: var(--gold);
+    color: var(--bg);
+    border-color: var(--gold);
+  }
+
+  .product-info {
+    padding: 1.5rem 1.5rem 1.8rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .product-category {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .product-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: var(--cream);
+    line-height: 1.3;
+    margin-bottom: 0.3rem;
+  }
+
+  .product-card.featured .product-name {
+    font-size: 1.5rem;
+  }
+
+  .product-sub {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    font-weight: 300;
+    margin-bottom: 1.2rem;
+  }
+
+  .product-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .product-price {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+  }
+
+  .product-price strong {
+    color: var(--cream);
+    font-weight: 400;
+  }
+
+  .product-rating {
+    display: flex;
+    gap: 2px;
+    align-items: center;
+  }
+
+  .star {
+    width: 8px;
+    height: 8px;
+    background: var(--gold-dim);
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  }
+
+  .star.empty { background: var(--text-muted); }
+
+  /* EDITORIAL BAND */
+  .editorial {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 5rem 3rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .editorial-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
+  }
+
+  .editorial h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    font-weight: 400;
+    color: var(--cream);
+    line-height: 1.25;
+  }
+
+  .editorial h2 em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .editorial-body {
+    color: var(--text-dim);
+    font-size: 0.88rem;
+    line-height: 2;
+    font-weight: 300;
+    max-width: 540px;
+  }
+
+  .editorial-body p + p { margin-top: 1rem; }
+
+  .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-top: 2rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-decoration: none;
+    border-bottom: 1px solid var(--gold-dim);
+    padding-bottom: 0.2rem;
+    transition: all 0.3s;
+    cursor: pointer;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+  }
+
+  .btn-outline:hover {
+    color: var(--cream);
+    border-bottom-color: var(--cream);
+    gap: 1.2rem;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 3rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  footer p {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    color: var(--text-muted);
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .footer-links a {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--text-dim); }
+
+  /* PRODUCT SVG ART */
+  .vessel-art, .serum-art, .oil-art, .elixir-art, .ritual-art {
+    width: 100%;
+    height: 100%;
+  }
+
+  @media (max-width: 900px) {
+    nav { padding: 1.2rem 1.5rem; }
+    .nav-links { display: none; }
+    .hero, .filters, .products-section { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .products-grid { grid-template-columns: 1fr; }
+    .product-card.featured { grid-column: span 1; }
+    .product-card.featured .product-image { aspect-ratio: 1; }
+    .editorial { grid-template-columns: 1fr; gap: 2rem; padding: 3rem 1.5rem; }
+    footer { flex-direction: column; gap: 1.5rem; padding: 2rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">Vault</a>
+  <ul class="nav-links">
+    <li><a href="#">House</a></li>
+    <li><a href="#" class="active">Collection</a></li>
+    <li><a href="#">Ritual</a></li>
+    <li><a href="#">Archive</a></li>
+    <li><a href="#">Atelier</a></li>
+  </ul>
+  <button class="nav-cart">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M1 1h1.8l1.4 7h6.3l1.1-5H4.2" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="6" cy="12" r="0.8" fill="currentColor"/>
+      <circle cx="10" cy="12" r="0.8" fill="currentColor"/>
+    </svg>
+    Vessel — 0
+  </button>
+</nav>
+
+<section class="hero">
+  <div class="hero-eyebrow">Collection MMXXV</div>
+  <h1>Objects of <em>considered</em><br>consequence</h1>
+  <p class="hero-sub">Each piece is developed across years, refined across seasons, and produced in numbers that honour the material — not the market.</p>
+</section>
+
+<div class="filters" style="max-width:1400px;margin:0 auto;padding:0 3rem 2rem;">
+  <div class="filter-tabs">
+    <button class="filter-tab active" onclick="filterProducts(event,'all')">All</button>
+    <button class="filter-tab" onclick="filterProducts(event,'skin')">Skin</button>
+    <button class="filter-tab" onclick="filterProducts(event,'body')">Body</button>
+    <button class="filter-tab" onclick="filterProducts(event,'ritual')">Ritual</button>
+    <button class="filter-tab" onclick="filterProducts(event,'limited')">Limited</button>
+  </div>
+  <div class="filter-sort">
+    <span>Order by</span>
+    <select>
+      <option>Curation</option>
+      <option>Price: Low</option>
+      <option>Price: High</option>
+      <option>Newest</option>
+    </select>
+  </div>
+</div>
+
+<section class="products-section">
+  <div class="products-grid" id="products-grid">
+
+    <!-- Card 1 — Featured -->
+    <article class="product-card featured" data-category="skin limited">
+      <div class="product-image">
+        <div class="product-badge">Limited — 240</div>
+        <div class="product-image-inner">
+          <svg viewBox="0 0 160 200" class="vessel-art" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="vg1" x1="40" y1="0" x2="120" y2="200" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#2a2318"/>
+                <stop offset="100%" stop-color="#1a1510"/>
+              </linearGradient>
+              <linearGradient id="vg2" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#c9a96e" stop-opacity="0.7"/>
+                <stop offset="50%" stop-color="#f0d49a" stop-opacity="0.3"/>
+                <stop offset="100%" stop-color="#c9a96e" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <!-- Bottle body -->
+            <path d="M52 60 Q50 80 48 100 Q45 140 44 170 Q44 180 80 180 Q116 180 116 170 Q115 140 112 100 Q110 80 108 60 Z" fill="url(#vg1)"/>
+            <!-- Shoulder cap -->
+            <path d="M52 60 Q58 45 80 42 Q102 45 108 60 Z" fill="#221c12"/>
+            <!-- Neck -->
+            <rect x="68" y="28" width="24" height="16" rx="2" fill="#1e1812"/>
+            <!-- Cap -->
+            <rect x="65" y="18" width="30" height="12" rx="3" fill="#2d2416"/>
+            <!-- Highlight streak -->
+            <path d="M56 75 Q55 120 54 160" stroke="url(#vg2)" stroke-width="8" stroke-linecap="round"/>
+            <!-- Label line -->
+            <rect x="50" y="118" width="60" height="0.5" fill="#c9a96e" opacity="0.4"/>
+            <rect x="50" y="134" width="60" height="0.5" fill="#c9a96e" opacity="0.2"/>
+            <!-- Label text dots -->
+            <circle cx="70" cy="126" r="1.2" fill="#9a7c4f"/>
+            <circle cx="80" cy="126" r="1.2" fill="#9a7c4f"/>
+            <circle cx="90" cy="126" r="1.2" fill="#9a7c4f"/>
+          </svg>
+        </div>
+        <button class="product-quick-add" title="Add to bag">+</button>
+      </div>
+      <div class="product-info">
+        <div class="product-category">Regenerative Skin</div>
+        <div class="product-name">Nuit Profonde — Nocturnal Concentrate</div>
+        <div class="product-sub">Night-activating retinal complex, 30 ml</div>
+        <div class="product-footer">
+          <div class="product-price"><strong>€ 340</strong> / 30 ml</div>
+          <div class="product-rating">
+            <div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star empty"></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Card 2 -->
+    <article class="product-card" data-category="skin">
+      <div class="product-image">
+        <div class="product-image-inner">
+          <svg viewBox="0 0 120 200" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+            <defs>
+              <linearGradient id="sg1" x1="20" y1="0" x2="100" y2="200" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#1e2420"/>
+                <stop offset="100%" stop-color="#131a14"/>
+              </linearGradient>
+            </defs>
+            <!-- Dropper bottle -->
+            <path d="M38 70 Q36 100 35 140 Q35 165 60 165 Q85 165 85 140 Q84 100 82 70 Z" fill="url(#sg1)"/>
+            <path d="M38 70 Q44 58 60 56 Q76 58 82 70 Z" fill="#192018"/>
+            <!-- Dropper neck long -->
+            <rect x="53" y="22" width="14" height="38" rx="3" fill="#1c2a1e"/>
+            <!-- Bulb -->
+            <ellipse cx="60" cy="16" rx="10" ry="8" fill="#273828"/>
+            <!-- Highlight -->
+            <path d="M42 85 Q41 120 40 150" stroke="#5a9e6a" stroke-width="5" stroke-linecap="round" stroke-opacity="0.15"/>
+            <!-- Thin label line -->
+            <rect x="38" y="112" width="44" height="0.5" fill="#4a8a5a" opacity="0.4"/>
+          </svg>
+        </div>
+        <button class="product-quick-add" title="Add to bag">+</button>
+      </div>
+      <div class="product-info">
+        <div class="product-category">Skin — Serum</div>
+        <div class="product-name">Chlorophyll Serum No. 7</div>
+        <div class="product-sub">Botanical brightening, 20 ml</div>
+        <div class="product-footer">
+          <div class="product-price"><strong>€ 185</strong> / 20 ml</div>
+          <div class="product-rating">
+            <div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Card 3 -->
+    <article class="product-card" data-category="body">
+      <div class="product-image">
+        <div class="product-image-inner">
+          <svg viewBox="0 0 120 200" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+            <defs>
+              <linearGradient id="og1" x1="10" y1="0" x2="110" y2="200" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#281f10"/>
+                <stop offset="100%" stop-color="#1c1508"/>
+              </linearGradient>
+            </defs>
+            <!-- Wide jar -->
+            <rect x="24" y="90" width="72" height="68" rx="4" fill="url(#og1)"/>
+            <!-- Lid -->
+            <rect x="20" y="80" width="80" height="14" rx="4" fill="#30240e"/>
+            <!-- Lid accent top -->
+            <rect x="28" y="78" width="64" height="5" rx="2" fill="#3a2c12"/>
+            <!-- Label -->
+            <rect x="28" y="112" width="64" height="28" rx="2" fill="#1e1808" opacity="0.7"/>
+            <rect x="28" y="111" width="64" height="0.5" fill="#c9a96e" opacity="0.5"/>
+            <rect x="28" y="140" width="64" height="0.5" fill="#c9a96e" opacity="0.3"/>
+            <!-- Lid shine -->
+            <ellipse cx="60" cy="80" rx="36" ry="3" fill="#c9a96e" fill-opacity="0.06"/>
+          </svg>
+        </div>
+        <button class="product-quick-add" title="Add to bag">+</button>
+      </div>
+      <div class="product-info">
+        <div class="product-category">Body — Balm</div>
+        <div class="product-name">Myrrhe Absolue Body Balm</div>
+        <div class="product-sub">Resinous restoration, 150 ml</div>
+        <div class="product-footer">
+          <div class="product-price"><strong>€ 210</strong> / 150 g</div>
+          <div class="product-rating">
+            <div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star empty"></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Card 4 -->
+    <article class="product-card" data-category="ritual">
+      <div class="product-image">
+        <div class="product-image-inner">
+          <svg viewBox="0 0 120 200" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+            <defs>
+              <linearGradient id="rg1" x1="30" y1="40" x2="90" y2="180" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#1f1c28"/>
+                <stop offset="100%" stop-color="#16141e"/>
+              </linearGradient>
+            </defs>
+            <!-- Candle -->
+            <rect x="35" y="90" width="50" height="90" rx="2" fill="url(#rg1)"/>
+            <!-- Top surface -->
+            <ellipse cx="60" cy="90" rx="25" ry="4" fill="#28243a"/>
+            <!-- Wick -->
+            <rect x="59" y="70" width="2" height="22" rx="1" fill="#3a3450"/>
+            <!-- Flame -->
+            <path d="M60 68 Q55 60 57 52 Q59 44 60 40 Q61 44 63 52 Q65 60 60 68Z" fill="#c9a96e" fill-opacity="0.8"/>
+            <path d="M60 66 Q57 60 58 54 Q59 48 60 44 Q61 48 62 54 Q63 60 60 66Z" fill="#f0d49a" fill-opacity="0.6"/>
+            <!-- Glow -->
+            <ellipse cx="60" cy="68" rx="12" ry="8" fill="#c9a96e" fill-opacity="0.08"/>
+            <!-- Label wrap -->
+            <rect x="35" y="128" width="50" height="30" fill="#1c1928" opacity="0.6"/>
+            <rect x="35" y="127" width="50" height="0.5" fill="#8a7aa0" opacity="0.4"/>
+            <rect x="35" y="158" width="50" height="0.5" fill="#8a7aa0" opacity="0.3"/>
+          </svg>
+        </div>
+        <button class="product-quick-add" title="Add to bag">+</button>
+      </div>
+      <div class="product-info">
+        <div class="product-category">Ritual — Candle</div>
+        <div class="product-name">Encens Noir — Ritual Candle</div>
+        <div class="product-sub">Oud & black amber, 180 g / 42 hr</div>
+        <div class="product-footer">
+          <div class="product-price"><strong>€ 95</strong> / single</div>
+          <div class="product-rating">
+            <div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Card 5 -->
+    <article class="product-card" data-category="skin">
+      <div class="product-image">
+        <div class="product-badge">New</div>
+        <div class="product-image-inner">
+          <svg viewBox="0 0 120 200" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+            <defs>
+              <linearGradient id="eg1" x1="20" y1="30" x2="100" y2="200" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#261418"/>
+                <stop offset="100%" stop-color="#1a0e10"/>
+              </linearGradient>
+            </defs>
+            <!-- Tall slim bottle -->
+            <path d="M45 72 Q43 100 42 145 Q42 168 60 168 Q78 168 78 145 Q77 100 75 72 Z" fill="url(#eg1)"/>
+            <path d="M45 72 Q50 60 60 58 Q70 60 75 72 Z" fill="#2a1418"/>
+            <!-- Slender neck -->
+            <rect x="55" y="30" width="10" height="30" rx="2" fill="#221016"/>
+            <!-- Cap with detail -->
+            <rect x="52" y="22" width="16" height="10" rx="2" fill="#2e1820"/>
+            <rect x="54" y="20" width="12" height="4" rx="1" fill="#3a2028"/>
+            <!-- Highlight -->
+            <path d="M49 82 Q48 115 47 148" stroke="#d4536a" stroke-width="4" stroke-linecap="round" stroke-opacity="0.12"/>
+            <!-- Thin label -->
+            <rect x="44" y="116" width="32" height="0.5" fill="#d4536a" opacity="0.4"/>
+            <rect x="44" y="130" width="32" height="0.5" fill="#d4536a" opacity="0.2"/>
+          </svg>
+        </div>
+        <button class="product-quick-add" title="Add to bag">+</button>
+      </div>
+      <div class="product-info">
+        <div class="product-category">Skin — Elixir</div>
+        <div class="product-name">Sang de Dragon Face Elixir</div>
+        <div class="product-sub">Wound-repair activator, 15 ml</div>
+        <div class="product-footer">
+          <div class="product-price"><strong>€ 290</strong> / 15 ml</div>
+          <div class="product-rating">
+            <div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star empty"></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Card 6 -->
+    <article class="product-card" data-category="body ritual">
+      <div class="product-image">
+        <div class="product-image-inner">
+          <svg viewBox="0 0 120 200" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+            <defs>
+              <linearGradient id="bg1x" x1="20" y1="50" x2="100" y2="180" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#101a20"/>
+                <stop offset="100%" stop-color="#0c1418"/>
+              </linearGradient>
+            </defs>
+            <!-- Wide pump bottle -->
+            <rect x="30" y="86" width="60" height="84" rx="3" fill="url(#bg1x)"/>
+            <!-- Shoulder -->
+            <path d="M30 86 Q30 76 60 74 Q90 76 90 86 Z" fill="#131e26"/>
+            <!-- Neck -->
+            <rect x="52" y="46" width="16" height="30" rx="2" fill="#0e1820"/>
+            <!-- Pump head -->
+            <rect x="46" y="38" width="28" height="10" rx="2" fill="#18262e"/>
+            <!-- Pump nozzle -->
+            <rect x="74" y="40" width="18" height="6" rx="2" fill="#1a2a34"/>
+            <!-- Highlight vertical -->
+            <rect x="34" y="92" width="6" height="70" rx="3" fill="#1e8fa0" fill-opacity="0.08"/>
+            <!-- Label area -->
+            <rect x="34" y="118" width="52" height="0.5" fill="#3aabba" opacity="0.4"/>
+            <rect x="34" y="142" width="52" height="0.5" fill="#3aabba" opacity="0.2"/>
+          </svg>
+        </div>
+        <button class="product-quick-add" title="Add to bag">+</button>
+      </div>
+      <div class="product-info">
+        <div class="product-category">Body — Oil</div>
+        <div class="product-name">Abyss Marine Body Oil</div>
+        <div class="product-sub">Deep-sea collagen complex, 100 ml</div>
+        <div class="product-footer">
+          <div class="product-price"><strong>€ 155</strong> / 100 ml</div>
+          <div class="product-rating">
+            <div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- Editorial band -->
+<section class="editorial">
+  <div>
+    <div class="editorial-label">The Philosophy</div>
+    <h2>Craft is not<br>a <em>feature</em></h2>
+  </div>
+  <div>
+    <p class="editorial-body">We do not formulate for the shelf. Every ingredient is sourced at peak yield, every concentration is determined by efficacy — not margin. Our batches are small because quality cannot be scaled without being diluted.</p>
+    <p class="editorial-body">The Vault archive contains sixty-four formulas developed since 2011. Twelve are in current production. The rest are held, awaiting materials of sufficient quality to proceed.</p>
+    <button class="btn-outline">Read our founding notes →</button>
+  </div>
+</section>
+
+<footer>
+  <p>© VAULT House of Botanicals — MMXXV</p>
+  <ul class="footer-links">
+    <li><a href="#">Privacy</a></li>
+    <li><a href="#">Shipping</a></li>
+    <li><a href="#">Returns</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+</footer>
+
+<script>
+  function filterProducts(e, category) {
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    e.target.classList.add('active');
+    document.querySelectorAll('.product-card').forEach(card => {
+      if (category === 'all') {
+        card.style.display = '';
+      } else {
+        const cats = card.dataset.category || '';
+        card.style.display = cats.includes(category) ? '' : 'none';
+      }
+    });
+  }
+</script>
+</body>
+</html>
